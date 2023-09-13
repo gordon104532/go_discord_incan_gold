@@ -1,0 +1,3 @@
+# go_discord_incan_gold
+整理之前用寫的桌遊印加寶藏 discord版
+嘗試改版成可獨立運作
