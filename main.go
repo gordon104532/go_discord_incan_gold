@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"main/DiscordBot"
 	"os"
@@ -25,7 +24,6 @@ func main() {
 	guildID := os.Getenv("GUILD_ID")
 	textChannelID := os.Getenv("TEXT_CHANNEL_ID")
 
-	fmt.Println("🎈", botToken, applicationID, guildID, textChannelID)
 	discordBotService := DiscordBot.NewDiscordBotService(botToken, applicationID, guildID, textChannelID)
 	discordBotService.Run()
 
