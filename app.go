@@ -26,10 +26,13 @@ var discordFuncMap = map[string]string{
 	"!印到底啦": "直接跳到總結算",
 }
 
-func NewDiscordBotService(botToken, applicationID, guildID, textChannelID string) *DiscordBotService {
-	dg, err := discordgo.New("Bot " + botToken)
-	if err != nil {
-		log.Fatal("DiscordBot new session error")
+func NewDiscordBotService(dg *discordgo.Session, botToken, applicationID, guildID, textChannelID string) *DiscordBotService {
+	if dg == nil {
+		var err error
+		dg, err = discordgo.New("Bot " + botToken)
+		if err != nil {
+			log.Fatal("DiscordBot new session error")
+		}
 	}
 
 	return &DiscordBotService{
