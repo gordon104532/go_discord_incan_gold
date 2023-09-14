@@ -1,4 +1,4 @@
-package DiscordBot
+package incanGold
 
 import (
 	"log"
@@ -18,9 +18,9 @@ type DiscordBotService struct {
 }
 
 var discordFuncMap = map[string]string{
-	"!準備印加": "印加寶藏-初始化",
+	"!準備印啦": "印加寶藏-初始化",
 	"!印啦":   "印加寶藏-參加",
-	"!準備印啦": "印加寶藏-開始",
+	"!開始印啦": "印加寶藏-開始",
 	"!等等印啦": "儲存遊戲狀態",
 	"!繼續印啦": "讀取遊戲狀態",
 	"!印到底啦": "直接跳到總結算",
@@ -93,7 +93,7 @@ func (d DiscordBotService) discordMessageHandle(s *discordgo.Session, m *discord
 
 	if strings.Contains(m.Content, "!") {
 		switch m.Content {
-		case "!h":
+		case "!說明印啦":
 			for v, i := range discordFuncMap {
 				context = context + v + " : " + i + "\n"
 			}

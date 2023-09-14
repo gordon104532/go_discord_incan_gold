@@ -1,4 +1,4 @@
-module main
+module incanGold
 
 go 1.19
 

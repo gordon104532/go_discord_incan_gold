@@ -2,11 +2,12 @@ package main
 
 import (
 	"log"
-	"main/DiscordBot"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
+
+	incan "github.com/gordon104532/go_discord_incan_gold"
 
 	"github.com/joho/godotenv"
 )
@@ -24,7 +25,7 @@ func main() {
 	guildID := os.Getenv("GUILD_ID")
 	textChannelID := os.Getenv("TEXT_CHANNEL_ID")
 
-	discordBotService := DiscordBot.NewDiscordBotService(botToken, applicationID, guildID, textChannelID)
+	discordBotService := incan.NewDiscordBotService(botToken, applicationID, guildID, textChannelID)
 	discordBotService.Run()
 
 	wg := &sync.WaitGroup{}

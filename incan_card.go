@@ -1,4 +1,4 @@
-package DiscordBot
+package incanGold
 
 var 災難 map[string]int = map[string]int{
 	"山崩1": 1,

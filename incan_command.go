@@ -1,4 +1,4 @@
-package DiscordBot
+package incanGold
 
 import (
 	"bytes"
