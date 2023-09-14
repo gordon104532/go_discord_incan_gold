@@ -10,37 +10,43 @@ import (
 )
 
 type DiscordBotService struct {
-	dg            *discordgo.Session
-	botToken      string
-	applicationID string
-	guildID       string
-	textChannelID string
+	dg              *discordgo.Session
+	botToken        string
+	applicationID   string
+	guildID         string
+	textChannelID   string
+	isSessionImport bool
 }
 
 var discordFuncMap = map[string]string{
-	"!準備印啦": "印加寶藏-初始化",
-	"!印啦":   "印加寶藏-參加",
-	"!開始印啦": "印加寶藏-開始",
-	"!等等印啦": "儲存遊戲狀態",
-	"!繼續印啦": "讀取遊戲狀態",
-	"!印到底啦": "直接跳到總結算",
+	"!印啦":         "印加寶藏-參加",
+	"!說明印啦":       "印加寶藏-初始化",
+	"!準備印啦":       "印加寶藏-初始化",
+	"!開始印啦":       "印加寶藏-開始",
+	"!等等印啦":       "儲存遊戲狀態",
+	"!繼續印啦":       "讀取遊戲狀態",
+	"!印到底啦":       "直接跳到總結算",
+	"/incan-gold": "使用探險/撤退(選擇動作暫不公開)",
 }
 
 func NewDiscordBotService(dg *discordgo.Session, botToken, applicationID, guildID, textChannelID string) *DiscordBotService {
+	var isSessionImport bool
 	if dg == nil {
 		var err error
 		dg, err = discordgo.New("Bot " + botToken)
 		if err != nil {
 			log.Fatal("DiscordBot new session error")
 		}
+		isSessionImport = true
 	}
 
 	return &DiscordBotService{
-		dg:            dg,
-		botToken:      botToken,
-		applicationID: applicationID,
-		guildID:       guildID,
-		textChannelID: textChannelID,
+		dg:              dg,
+		botToken:        botToken,
+		applicationID:   applicationID,
+		guildID:         guildID,
+		textChannelID:   textChannelID,
+		isSessionImport: isSessionImport,
 	}
 }
 
@@ -69,15 +75,17 @@ func (d DiscordBotService) Run() {
 
 	d.dg.Identify.Intents = discordgo.IntentsGuildMessages
 
-	// 開啟連線
-	err := d.dg.Open()
-	if err != nil {
-		log.Fatal("DiscordBot error opening connection,", err)
-		return
-	}
+	if d.isSessionImport {
+		// 開啟連線
+		err := d.dg.Open()
+		if err != nil {
+			log.Fatal("DiscordBot error opening connection,", err)
+			return
+		}
 
-	// Cleanly close down the Discord session.
-	defer d.dg.Close()
+		// Cleanly close down the Discord session.
+		defer d.dg.Close()
+	}
 }
 
 // 接收訊息與處理
