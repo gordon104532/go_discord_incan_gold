@@ -15,9 +15,9 @@ import (
 func main() {
 	log.Println("Server Start")
 
-	err := godotenv.Load()
+	err := godotenv.Load("./cmd/.env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file", err)
 	}
 
 	botToken := os.Getenv("BOT_TOKEN")

@@ -1,4 +1,4 @@
-module incanGold
+module github.com/gordon104532/go_discord_incan_gold
 
 go 1.19
 
