@@ -53,7 +53,7 @@ func NewDiscordBotService(dg *discordgo.Session, botToken, applicationID, guildI
 	}
 }
 
-func (d DiscordBotService) Run() {
+func (d *DiscordBotService) Run() {
 	rand.Seed(time.Now().UnixNano())
 	if d.debug {
 		log.SetLevel(log.DebugLevel)
@@ -62,23 +62,25 @@ func (d DiscordBotService) Run() {
 	}
 
 	log.Println("DiscordBot Init")
-
-	log.Println("DiscordBot Adding commands...")
-	registeredCommands := make([]*discordgo.ApplicationCommand, len(commands))
-	for i, v := range commands {
-		cmd, err := d.dg.ApplicationCommandCreate(d.applicationID, d.guildID, v)
-		if err != nil {
-			log.Printf("DiscordBot Cannot create '%v' command: %v", v.Name, err)
-		}
-		registeredCommands[i] = cmd
-	}
+	滴吸服務 = d
 
 	// Register the messageCreate func as a callback for MessageCreate events.
 	d.dg.AddHandler(d.discordMessageHandle)
 
 	d.dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
-			h(s, i)
+		switch i.Type {
+		case discordgo.InteractionMessageComponent:
+			if h, ok := componentsHandlers[i.MessageComponentData().CustomID]; ok {
+				h(s, i)
+			}
+		default:
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: "指令未實作",
+					Flags:   discordgo.MessageFlagsEphemeral,
+				},
+			})
 		}
 	})
 
@@ -109,38 +111,46 @@ func (d DiscordBotService) discordMessageHandle(s *discordgo.Session, m *discord
 		return
 	}
 
-	var context string // 回傳的訊息內容
+	var content string // 回傳的訊息內容
 
 	if strings.Contains(m.Content, "!") {
 		switch m.Content {
 		case "!說明印啦":
 			for v, i := range discordFuncMap {
-				context = context + v + " : " + i + "\n"
+				content = content + v + " : " + i + "\n"
 			}
 		case "!準備印啦":
 			準備印加寶藏(&d)
 		case "!印啦":
-			context = 報名參加(m.Author.Username)
+			content = 報名參加(m.Author.Username)
 		case "!開始印啦":
 			回合初始化()
 		case "!等等印啦":
 			儲存印加進度()
-			context = "儲存印加進度"
+			content = "儲存印加進度"
 		case "!繼續印啦":
 			讀取印加進度()
-			context = "讀取印加進度"
+			content = "讀取印加進度"
 		case "!印到底啦":
 			探險總結算()
 		}
 	}
 
-	if len(context) > 0 {
+	if len(content) > 0 {
 		// 送出訊息
-		d.SendMsgToDiscord(context)
+		d.SendMsgToDiscord(content)
 	}
 }
 
 // 外部訊息傳入discord
-func (d DiscordBotService) SendMsgToDiscord(context string) {
-	d.dg.ChannelMessageSend(d.textChannelID, context)
+func (d DiscordBotService) SendMsgToDiscord(content string) {
+	d.dg.ChannelMessageSend(d.textChannelID, content)
+}
+
+// 外部訊息傳入discord
+func (d DiscordBotService) SendButtonMsgToDiscord(content string) {
+	d.dg.ChannelMessageSendComplex(d.textChannelID, &discordgo.MessageSend{
+		Content:    content,
+		Components: buttonComponent,
+	})
 }
