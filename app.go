@@ -1,10 +1,11 @@
 package incanGold
 
 import (
-	"log"
 	"math/rand"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -16,6 +17,7 @@ type DiscordBotService struct {
 	guildID         string
 	textChannelID   string
 	isSessionImport bool
+	debug           bool
 }
 
 var discordFuncMap = map[string]string{
@@ -29,7 +31,7 @@ var discordFuncMap = map[string]string{
 	"/incan-gold": "使用探險/撤退(選擇動作暫不公開)",
 }
 
-func NewDiscordBotService(dg *discordgo.Session, botToken, applicationID, guildID, textChannelID string) *DiscordBotService {
+func NewDiscordBotService(dg *discordgo.Session, botToken, applicationID, guildID, textChannelID string, debug bool) *DiscordBotService {
 	var isSessionImport bool
 	if dg == nil {
 		var err error
@@ -47,11 +49,18 @@ func NewDiscordBotService(dg *discordgo.Session, botToken, applicationID, guildI
 		guildID:         guildID,
 		textChannelID:   textChannelID,
 		isSessionImport: isSessionImport,
+		debug:           debug,
 	}
 }
 
 func (d DiscordBotService) Run() {
 	rand.Seed(time.Now().UnixNano())
+	if d.debug {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
+	}
+
 	log.Println("DiscordBot Init")
 
 	log.Println("DiscordBot Adding commands...")

@@ -1,9 +1,8 @@
 package incanGold
 
 import (
-	"fmt"
-
 	"github.com/robfig/cron"
+	log "github.com/sirupsen/logrus"
 )
 
 // 等待時間倒數
@@ -43,7 +42,7 @@ func 自動出牌() {
 				動作 = "撤退"
 			}
 			探險隊[探險者名稱] = 探險者異動
-			fmt.Println("自動出牌: ", 探險者名稱, " ", 動作, " ", 探險隊[探險者名稱])
+			log.Info("自動出牌: ", 探險者名稱, " ", 動作, " ", 探險隊[探險者名稱])
 			自動出牌報告 = 自動出牌報告 + 探險者名稱 + ": " + 動作 + "\n"
 			已出牌人數++
 		}

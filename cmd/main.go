@@ -25,7 +25,7 @@ func main() {
 	guildID := os.Getenv("GUILD_ID")
 	textChannelID := os.Getenv("TEXT_CHANNEL_ID")
 
-	incan.NewDiscordBotService(nil, botToken, applicationID, guildID, textChannelID).Run()
+	incan.NewDiscordBotService(nil, botToken, applicationID, guildID, textChannelID, true).Run()
 
 	wg := &sync.WaitGroup{}
 	c := make(chan os.Signal, 1)

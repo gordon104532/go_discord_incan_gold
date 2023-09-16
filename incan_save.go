@@ -3,9 +3,9 @@ package incanGold
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
-	"log"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type IncanSave struct {
@@ -117,13 +117,13 @@ func 儲存印加進度() {
 	存檔.AdventureTeam = 探險隊存檔
 	msgJSON, err := json.Marshal(存檔)
 	if err != nil {
-		log.Printf("儲存印加進度 Marshal失敗 err:\n %v", err)
+		log.Errorf("儲存印加進度 Marshal失敗 err:\n %v", err)
 		return
 	}
 	writeErr := os.WriteFile("incanSave.txt", msgJSON, 0644)
 	if writeErr != nil {
-		log.Printf("儲存印加進度失敗 請備份內容如下:\n %v, writeErr:%v\n", 存檔, writeErr)
+		log.Errorf("儲存印加進度失敗 請備份內容如下:\n %v, writeErr:%v\n", 存檔, writeErr)
 	} else {
-		fmt.Println("儲存印加進度完成")
+		log.Info("儲存印加進度完成")
 	}
 }
