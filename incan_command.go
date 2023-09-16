@@ -26,7 +26,8 @@ var (
 						{
 							Name: "forward",
 							NameLocalizations: map[discordgo.Locale]string{
-								discordgo.ChineseCN: "探險",
+								discordgo.ChineseCN: "探险",
+								discordgo.ChineseTW: "探險",
 							},
 							Value: 1,
 						},
@@ -34,6 +35,7 @@ var (
 							Name: "retreat",
 							NameLocalizations: map[discordgo.Locale]string{
 								discordgo.ChineseCN: "撤退",
+								discordgo.ChineseTW: "撤退",
 							},
 							Value: 2,
 						},
