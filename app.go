@@ -150,8 +150,42 @@ func (d DiscordBotService) SendMsgToDiscord(content string) {
 
 // 外部訊息傳入discord
 func (d DiscordBotService) SendButtonMsgToDiscord(content string) {
-	d.dg.ChannelMessageSendComplex(d.textChannelID, &discordgo.MessageSend{
+	msg, err := d.dg.ChannelMessageSendComplex(d.textChannelID, &discordgo.MessageSend{
 		Content:    content,
 		Components: buttonComponent,
 	})
+
+	if err != nil {
+		log.Error("SendButtonMsg err:", err)
+		return
+	}
+
+	當前互動訊息 = msg.ID
+}
+
+// 外部訊息傳入discord
+func (d DiscordBotService) EditButtonMsg(content string, removeButton bool) {
+	interactMsg, err := d.dg.ChannelMessage(d.textChannelID, 當前互動訊息)
+	if err != nil {
+		log.Error("EditButtonMsg get msg err:", err)
+		return
+	}
+
+	interactMsg.Content = interactMsg.Content + "\n" + content
+
+	setComponent := buttonComponent
+	if removeButton {
+		setComponent = buttonComponentDisable
+	}
+
+	_, err = d.dg.ChannelMessageEditComplex(&discordgo.MessageEdit{
+		ID:         interactMsg.ID,
+		Channel:    interactMsg.ChannelID,
+		Content:    &interactMsg.Content,
+		Components: setComponent,
+	})
+	if err != nil {
+		log.Error("EditButtonMsg EditComplex err:", err)
+		return
+	}
 }

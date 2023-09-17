@@ -27,7 +27,7 @@ type IncanSave struct {
 type IncanSavePlayer struct {
 	Tent         int `json:"帳篷"`
 	Pocket       int `json:"口袋"`
-	Status       int `json:"冒險狀態"`
+	Status       int `json:"探險狀態"`
 	ToolBackpack int `json:"神器背包"`
 	Death        int `json:"死亡次數"`
 }
@@ -77,7 +77,7 @@ func 讀取印加進度() {
 		var 暫存探險者 探險者
 		暫存探險者.帳篷 = 存檔.AdventureTeam[探險者名稱].Tent
 		暫存探險者.口袋 = 存檔.AdventureTeam[探險者名稱].Pocket
-		暫存探險者.冒險狀態 = 存檔.AdventureTeam[探險者名稱].Status
+		暫存探險者.探險狀態 = 存檔.AdventureTeam[探險者名稱].Status
 		暫存探險者.神器背包 = 存檔.AdventureTeam[探險者名稱].ToolBackpack
 		暫存探險者.死亡次數 = 存檔.AdventureTeam[探險者名稱].Death
 
@@ -108,7 +108,7 @@ func 儲存印加進度() {
 		var 暫存探險者 IncanSavePlayer
 		暫存探險者.Tent = 探險隊[探險者名稱].帳篷
 		暫存探險者.Pocket = 探險隊[探險者名稱].口袋
-		暫存探險者.Status = 探險隊[探險者名稱].冒險狀態
+		暫存探險者.Status = 探險隊[探險者名稱].探險狀態
 		暫存探險者.ToolBackpack = 探險隊[探險者名稱].神器背包
 		暫存探險者.Death = 探險隊[探險者名稱].死亡次數
 		探險隊存檔[探險者名稱] = 暫存探險者
