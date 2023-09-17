@@ -26,15 +26,29 @@ var (
 
 	componentsHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
 		"fd_forward": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			探險者動作(i.Member.User.Username, "探險")
+			res := 探險者動作(i.Member.User.Username, "探險")
+			var content string
+			if res != "" {
+				content = i.Member.User.Username + res
+			}
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: content,
+				},
 			})
 		},
 		"fd_retreat": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			探險者動作(i.Member.User.Username, "撤退")
+			res := 探險者動作(i.Member.User.Username, "撤退")
+			var content string
+			if res != "" {
+				content = i.Member.User.Username + res
+			}
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: content,
+				},
 			})
 		},
 	}
