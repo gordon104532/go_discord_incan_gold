@@ -20,15 +20,15 @@ type DiscordBotService struct {
 	debug           bool
 }
 
+var DiscordBotSrv *DiscordBotService
 var discordFuncMap = map[string]string{
-	"!印啦":         "印加寶藏-參加",
-	"!說明印啦":       "印加寶藏-初始化",
-	"!準備印啦":       "印加寶藏-初始化",
-	"!開始印啦":       "印加寶藏-開始",
-	"!等等印啦":       "儲存遊戲狀態",
-	"!繼續印啦":       "讀取遊戲狀態",
-	"!印到底啦":       "直接跳到總結算",
-	"/incan-gold": "使用探險/撤退(選擇動作暫不公開)",
+	"!印啦":   "印加寶藏-參加",
+	"!說明印啦": "印加寶藏-初始化",
+	"!準備印啦": "印加寶藏-初始化",
+	"!開始印啦": "印加寶藏-開始",
+	"!等等印啦": "儲存遊戲狀態",
+	"!繼續印啦": "讀取遊戲狀態",
+	"!印到底啦": "直接跳到總結算",
 }
 
 func NewDiscordBotService(dg *discordgo.Session, botToken, applicationID, guildID, textChannelID string, debug bool) *DiscordBotService {
@@ -42,7 +42,7 @@ func NewDiscordBotService(dg *discordgo.Session, botToken, applicationID, guildI
 		isSessionImport = true
 	}
 
-	return &DiscordBotService{
+	DiscordBotSrv = &DiscordBotService{
 		dg:              dg,
 		botToken:        botToken,
 		applicationID:   applicationID,
@@ -51,6 +51,8 @@ func NewDiscordBotService(dg *discordgo.Session, botToken, applicationID, guildI
 		isSessionImport: isSessionImport,
 		debug:           debug,
 	}
+
+	return DiscordBotSrv
 }
 
 func (d *DiscordBotService) Run() {
@@ -62,7 +64,6 @@ func (d *DiscordBotService) Run() {
 	}
 
 	log.Println("DiscordBot Init")
-	滴吸服務 = d
 
 	// Register the messageCreate func as a callback for MessageCreate events.
 	d.dg.AddHandler(d.discordMessageHandle)

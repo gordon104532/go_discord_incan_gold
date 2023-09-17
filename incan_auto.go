@@ -48,7 +48,7 @@ func 自動出牌() {
 		}
 	}
 
-	滴吸服務.SendMsgToDiscord(自動出牌報告)
+	DiscordBotSrv.SendMsgToDiscord(自動出牌報告)
 	是否需要自動出牌 = false
 	go 回合結算()
 }

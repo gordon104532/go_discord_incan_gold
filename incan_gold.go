@@ -10,7 +10,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var 滴吸服務 *DiscordBotService
 var 冒險者狀態表 map[int]string = map[int]string{
 	0: "準備狀態",
 	1: "待選擇",
@@ -63,7 +62,6 @@ func 準備印加寶藏(d *DiscordBotService) {
 	是否探險總結算 = false
 	回合台面 = []string{}
 
-	滴吸服務 = d
 	發送訊息到頻道("發現藏寶圖，誰印啦?  🗺")
 }
 
@@ -495,9 +493,9 @@ func 隨機數字(最小, 最大 int) int {
 }
 
 func 發送訊息到頻道(內容 string) {
-	滴吸服務.SendMsgToDiscord(內容)
+	DiscordBotSrv.SendMsgToDiscord(內容)
 }
 
 func 發送按鈕訊息到頻道(內容 string) {
-	滴吸服務.SendButtonMsgToDiscord(內容)
+	DiscordBotSrv.SendButtonMsgToDiscord(內容)
 }
