@@ -349,7 +349,8 @@ func 回合結算() {
 			回合回報 = 回合回報 + fmt.Sprintf("打包回家: %s\n", strings.Join(打包回家名單, ", "))
 		}
 
-		發送訊息到頻道(回合回報)
+		編輯互動訊息(回合回報, true)
+
 		time.Sleep(time.Second * 3)
 		回合初始化()
 	}
@@ -402,14 +403,12 @@ func 神殿結算() {
 	是否神殿結算 = false
 
 	if 神殿 == 神殿總回合數 {
-		神殿回報 := fmt.Sprint("神殿", 神殿, "結束，探險結算中 🎲")
-		發送訊息到頻道(神殿回報)
+		編輯互動訊息(fmt.Sprint("神殿", 神殿, "結束，探險結算中 🎲"), true)
 		time.Sleep(time.Second * 3)
 		探險總結算()
 	} else {
 		神殿++
-		神殿回報 := fmt.Sprint("神殿", 神殿, "初始化中 🎲")
-		發送訊息到頻道(神殿回報)
+		編輯互動訊息(fmt.Sprint("神殿", 神殿, "初始化中 🎲"), true)
 		time.Sleep(time.Second * 5)
 		神殿初始化()
 	}
