@@ -149,10 +149,19 @@ func (d DiscordBotService) SendMsgToDiscord(content string) {
 }
 
 // 外部訊息傳入discord
-func (d DiscordBotService) SendButtonMsgToDiscord(content string) {
+func (d DiscordBotService) SendButtonMsgToDiscord(draw, table, diamond string) {
 	msg, err := d.dg.ChannelMessageSendComplex(d.textChannelID, &discordgo.MessageSend{
-		Content:    content,
 		Components: buttonComponent,
+		Embed: &discordgo.MessageEmbed{
+			Type:  "rich",
+			Title: "本回合抽出: [" + draw + "]",
+			Color: 2552136,
+			Fields: []*discordgo.MessageEmbedField{
+				{Name: "桌面:", Value: "[" + table + "]", Inline: false},
+				{Name: "鑽石:", Value: diamond, Inline: false},
+				{Name: "收到:", Value: "", Inline: false},
+			},
+		},
 	})
 
 	if err != nil {
@@ -164,14 +173,12 @@ func (d DiscordBotService) SendButtonMsgToDiscord(content string) {
 }
 
 // 外部訊息傳入discord
-func (d DiscordBotService) EditButtonMsg(content string, removeButton bool) {
+func (d DiscordBotService) EditButtonMsg(addContent string, removeButton bool) {
 	interactMsg, err := d.dg.ChannelMessage(d.textChannelID, 當前互動訊息)
 	if err != nil {
 		log.Error("EditButtonMsg get msg err:", err)
 		return
 	}
-
-	interactMsg.Content = interactMsg.Content + "\n" + content
 
 	setComponent := buttonComponent
 	if removeButton {
@@ -183,6 +190,16 @@ func (d DiscordBotService) EditButtonMsg(content string, removeButton bool) {
 		Channel:    interactMsg.ChannelID,
 		Content:    &interactMsg.Content,
 		Components: setComponent,
+		Embed: &discordgo.MessageEmbed{
+			Type:  "rich",
+			Title: "",
+			Color: 2552136,
+			Fields: []*discordgo.MessageEmbedField{
+				{Name: "桌面:", Value: interactMsg.Embeds[0].Fields[0].Value, Inline: false},
+				{Name: "鑽石:", Value: interactMsg.Embeds[0].Fields[1].Value, Inline: false},
+				{Name: "探險者", Value: interactMsg.Embeds[0].Fields[2].Value + addContent, Inline: false},
+			},
+		},
 	})
 	if err != nil {
 		log.Error("EditButtonMsg EditComplex err:", err)

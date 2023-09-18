@@ -7,7 +7,7 @@
 - 先有discord頻道
 - 再有機器人
 - 機器人加入頻道
-- 新增.\cmd\.env
+- 新增.\cmd\\.env
 - go run .\cmd\main.go
 
 ## 現有功能

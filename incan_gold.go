@@ -189,8 +189,7 @@ func 回合初始化() {
 	log.Debug("===回合初始化=== ", 回合)
 	log.Debugf("回合卡池: %d, 卡號: %d", len(回合卡池), 抽出卡號)
 	log.Debug(回合卡池)
-	公告內容 := fmt.Sprintf("=== 本回合抽出: [%s] ===\n", 抽出卡片)
-
+	鑽石回報 := ""
 	// 公告抽中的牌 分給幾個人 場上剩餘幾顆
 	if strings.Contains(抽出卡片, "寶藏") || strings.Contains(抽出卡片, "神器") {
 		if 神器鑽石數, 有神器 := 神器[抽出卡片]; 有神器 {
@@ -233,7 +232,7 @@ func 回合初始化() {
 				}
 			}
 			場上閒置鑽石 = 回合總鑽石數
-			公告內容 = 公告內容 + fmt.Sprintf("共 %d 人平分, 桌面剩 %d 鑽\n", 探險中人數, 場上閒置鑽石)
+			鑽石回報 = fmt.Sprintf("共 %d 人平分, 桌面剩 %d 鑽\n", 探險中人數, 場上閒置鑽石)
 		}
 	} else {
 		for 探險者名稱 := range 探險隊 {
@@ -248,7 +247,7 @@ func 回合初始化() {
 		災難類型 := string([]rune(抽出卡片)[:2])
 		for 檢查序數 := range 回合台面 {
 			if strings.Contains(回合台面[檢查序數], 災難類型) {
-				公告內容 = 公告內容 + "💥這個穴不行了🔥\n"
+				鑽石回報 = "💥這個穴不行了🔥\n"
 
 				// 下局移除此災難
 				移除災難 = 抽出卡片
@@ -258,7 +257,7 @@ func 回合初始化() {
 		}
 
 		if !是否神殿結算 {
-			公告內容 = 公告內容 + fmt.Sprintf("桌面剩 %d 鑽\n", 場上閒置鑽石)
+			鑽石回報 = fmt.Sprintf("桌面剩 %d 鑽\n", 場上閒置鑽石)
 		}
 	}
 
@@ -276,24 +275,20 @@ func 回合初始化() {
 	遊戲狀態 = 3
 
 	// 戰況回報
-	log.Debugf(公告內容)
 	log.Debug("回合台面", 回合台面)
 	log.Debugf("探險隊 %+v", 探險隊)
 	if 場上閒置神器 != "" {
-		公告內容 = 公告內容 + ", 場上神器: " + 場上閒置神器 + "\n"
-	} else {
-		公告內容 = 公告內容 + "\n"
+		鑽石回報 = 鑽石回報 + "場上神器: " + 場上閒置神器 + "\n"
 	}
-
-	回傳內容 = 回傳內容 + 公告內容 + "桌面:[" + strings.Join(回合台面, " ") + "]\n"
 
 	if 是否神殿結算 {
-		發送訊息到頻道(回傳內容)
+		發送按鈕訊息到頻道(抽出卡片, strings.Join(回合台面, " "), 鑽石回報)
 		神殿結算()
 	} else {
-		發送按鈕訊息到頻道(回傳內容)
+		發送按鈕訊息到頻道(抽出卡片, strings.Join(回合台面, " "), 鑽石回報)
 	}
 }
+
 func 回合結算() {
 	// 探險隊結算
 	log.Debug("===回合結算=== ", 回合)
@@ -495,8 +490,8 @@ func 發送訊息到頻道(內容 string) {
 	DiscordBotSrv.SendMsgToDiscord(內容)
 }
 
-func 發送按鈕訊息到頻道(內容 string) {
-	DiscordBotSrv.SendButtonMsgToDiscord(內容)
+func 發送按鈕訊息到頻道(抽牌, 桌面, 鑽石 string) {
+	DiscordBotSrv.SendButtonMsgToDiscord(抽牌, 桌面, 鑽石)
 }
 
 func 編輯互動訊息(內容 string, 是否移除按鈕 bool) {
