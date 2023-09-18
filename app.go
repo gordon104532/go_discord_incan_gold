@@ -159,9 +159,14 @@ func (d DiscordBotService) SendMsgToDiscord(content string) {
 }
 
 // 外部訊息傳入discord
-func (d DiscordBotService) SendButtonMsgToDiscord(draw, table, diamond string) {
+func (d DiscordBotService) SendButtonMsgToDiscord(draw, table, diamond string, removeButton bool) {
+	setComponent := buttonComponent
+	if removeButton {
+		setComponent = buttonComponentDisable
+	}
+
 	msg, err := d.dg.ChannelMessageSendComplex(d.textChannelID, &discordgo.MessageSend{
-		Components: buttonComponent,
+		Components: setComponent,
 		Embed: &discordgo.MessageEmbed{
 			Type:  "rich",
 			Title: "本回合抽出: [" + draw + "]",

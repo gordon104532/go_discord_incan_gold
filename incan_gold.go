@@ -277,10 +277,10 @@ func 回合初始化() {
 	}
 
 	if 是否神殿結算 {
-		發送按鈕訊息到頻道(抽出卡片, strings.Join(回合台面, " "), 鑽石回報)
+		發送按鈕訊息到頻道(抽出卡片, strings.Join(回合台面, " "), 鑽石回報, true)
 		神殿結算()
 	} else {
-		發送按鈕訊息到頻道(抽出卡片, strings.Join(回合台面, " "), 鑽石回報)
+		發送按鈕訊息到頻道(抽出卡片, strings.Join(回合台面, " "), 鑽石回報, false)
 	}
 }
 
@@ -486,8 +486,8 @@ func 發送訊息到頻道(內容 string) {
 	DiscordBotSrv.SendMsgToDiscord(內容)
 }
 
-func 發送按鈕訊息到頻道(抽牌, 桌面, 鑽石 string) {
-	DiscordBotSrv.SendButtonMsgToDiscord(抽牌, 桌面, 鑽石)
+func 發送按鈕訊息到頻道(抽牌, 桌面, 鑽石 string, 是否移除按鈕 bool) {
+	DiscordBotSrv.SendButtonMsgToDiscord(抽牌, 桌面, 鑽石, 是否移除按鈕)
 }
 
 func 編輯互動訊息(內容 string, 是否移除按鈕 bool) {
