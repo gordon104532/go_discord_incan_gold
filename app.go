@@ -2,6 +2,7 @@ package incanGold
 
 import (
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 
@@ -120,8 +121,6 @@ func (d DiscordBotService) discordMessageHandle(s *discordgo.Session, m *discord
 			for v, i := range discordFuncMap {
 				content = content + v + " : " + i + "\n"
 			}
-		case "!準備印啦":
-			準備印加寶藏(&d)
 		case "!印啦":
 			content = 報名參加(m.Author.Username)
 		case "!開始印啦":
@@ -134,6 +133,17 @@ func (d DiscordBotService) discordMessageHandle(s *discordgo.Session, m *discord
 			content = "讀取印加進度"
 		case "!印到底啦":
 			探險總結算()
+		}
+
+		if strings.Contains(m.Content, "!準備印啦") {
+			str := strings.Replace(m.Content, "!準備印啦", "", -1)
+			rounds, err := strconv.Atoi(str)
+			if err != nil {
+				log.Error("!準備印啦 回合數 parse err:", err)
+				rounds = 5
+			}
+
+			準備印加寶藏(&d, rounds)
 		}
 	}
 
@@ -185,15 +195,19 @@ func (d DiscordBotService) EditButtonMsg(addContent string, removeButton bool) {
 		setComponent = buttonComponentDisable
 	}
 
+	if interactMsg.Embeds[0].Fields[2].Value != "" {
+		addContent = "\n" + addContent
+	}
+
 	_, err = d.dg.ChannelMessageEditComplex(&discordgo.MessageEdit{
 		ID:         interactMsg.ID,
 		Channel:    interactMsg.ChannelID,
 		Content:    &interactMsg.Content,
 		Components: setComponent,
 		Embed: &discordgo.MessageEmbed{
-			Type:  "rich",
-			Title: "",
-			Color: 2552136,
+			Type:  interactMsg.Embeds[0].Type,
+			Title: interactMsg.Embeds[0].Title,
+			Color: interactMsg.Embeds[0].Color,
 			Fields: []*discordgo.MessageEmbedField{
 				{Name: "桌面:", Value: interactMsg.Embeds[0].Fields[0].Value, Inline: false},
 				{Name: "鑽石:", Value: interactMsg.Embeds[0].Fields[1].Value, Inline: false},

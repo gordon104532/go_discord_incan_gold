@@ -40,7 +40,7 @@ var 探險者狀態表 map[int]string = map[int]string{
 
 var 當前互動訊息 string
 
-func 準備印加寶藏(d *DiscordBotService) {
+func 準備印加寶藏(d *DiscordBotService, 神殿數 int) {
 
 	探險隊 = map[string]探險者{}
 	回合卡池 = []string{}
@@ -54,6 +54,7 @@ func 準備印加寶藏(d *DiscordBotService) {
 	}
 
 	神殿 = 1
+	神殿總回合數 = 神殿數
 	神器庫存 = 神器
 	回合卡池 = append(回合卡池, 抽神器())
 
@@ -171,14 +172,8 @@ func 回合初始化() {
 		return
 	}
 
-	回傳內容 := ""
 	if 回合 == 0 {
 		探險中人數 = len(探險隊)
-		回傳內容 = 回傳內容 + fmt.Sprintf("神殿%d探險者: ", 神殿)
-		for 探險者名稱 := range 探險隊 {
-			回傳內容 = 回傳內容 + "@" + 探險者名稱 + " , "
-		}
-		回傳內容 = 回傳內容 + "\n"
 	}
 
 	本次探險人數 = 探險中人數
@@ -362,6 +357,7 @@ func 回合結算() {
 
 // 神殿變數
 var 神殿 int = 0
+var 神殿總回合數 int = 0
 var 神器庫存 map[string]int = make(map[string]int)
 
 func 神殿初始化() {
@@ -405,7 +401,7 @@ func 神殿結算() {
 	回合卡池 = []string{}
 	是否神殿結算 = false
 
-	if 神殿 == 5 {
+	if 神殿 == 神殿總回合數 {
 		神殿回報 := fmt.Sprint("神殿", 神殿, "結束，探險結算中 🎲")
 		發送訊息到頻道(神殿回報)
 		time.Sleep(time.Second * 3)
